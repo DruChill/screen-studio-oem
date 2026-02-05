@@ -34,17 +34,14 @@ struct ContentView: View {
             // ═══════════════════════════════════════════════════════════════
             // CONTENIDO PRINCIPAL - Info y estado
             // ═══════════════════════════════════════════════════════════════
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Información de la app
-                    infoSection
-                    
-
-                    // Estado actual de la operación
-                    statusSection
-                }
-                .padding(20)
+            VStack(alignment: .leading, spacing: 16) {
+                // Información de la app
+                infoSection
+                
+                // Estado actual de la operación
+                statusSection
             }
+            .padding(20)
             
             Divider()
                 .padding(.horizontal)
@@ -54,7 +51,7 @@ struct ContentView: View {
             // ═══════════════════════════════════════════════════════════════
             footerSection
         }
-        .frame(width: 400, height: 520)
+        .frame(width: 400, height: 600)
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             // Verificar si ya está activado al abrir
