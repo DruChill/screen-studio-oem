@@ -39,8 +39,6 @@ struct ContentView: View {
                     // Información de la app
                     infoSection
                     
-                    // Lista de dominios que se bloquearán
-                    domainsSection
                     
                     // Estado actual de la operación
                     statusSection
@@ -96,33 +94,6 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - Domains Section
-    private var domainsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label("Dominios a bloquear:", systemImage: "network.slash")
-                .font(.system(size: 13, weight: .semibold))
-            
-            VStack(alignment: .leading, spacing: 6) {
-                ForEach(AuthorizationService.blockedDomains, id: \.self) { domain in
-                    HStack(spacing: 8) {
-                        Image(systemName: "arrow.right.circle.fill")
-                            .font(.system(size: 10))
-                            .foregroundStyle(.orange)
-                        Text("127.0.0.1 → \(domain)")
-                            .font(.system(size: 11, design: .monospaced))
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-            .padding(.leading, 24)
-        }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.orange.opacity(0.08))
-                .stroke(Color.orange.opacity(0.2), lineWidth: 1)
-        )
-    }
     
     // MARK: - Status Section
     private var statusSection: some View {
