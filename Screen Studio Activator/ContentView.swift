@@ -76,10 +76,6 @@ struct ContentView: View {
             
             Text("Screen Studio Activator")
                 .font(.system(size: 18, weight: .bold))
-            
-            Text("Activador local para Screen Studio")
-                .font(.system(size: 12))
-                .foregroundStyle(.secondary)
         }
         .padding(.vertical, 20)
         .frame(maxWidth: .infinity)
@@ -87,7 +83,7 @@ struct ContentView: View {
     
     // MARK: - Info Section
     private var infoSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 0) {
             // Creador
             InfoRowSF(
                 icon: "person.fill",
@@ -95,6 +91,8 @@ struct ContentView: View {
                 title: "Creado por",
                 value: "kimYuna"
             )
+            
+            Divider().padding(.vertical, 8)
             
             // Tipo de activador
             InfoRowSF(
@@ -104,6 +102,8 @@ struct ContentView: View {
                 value: "Activador Local"
             )
             
+            Divider().padding(.vertical, 8)
+            
             // Versión compatible
             InfoRowSF(
                 icon: "app.badge.checkmark.fill",
@@ -112,6 +112,8 @@ struct ContentView: View {
                 value: "Screen Studio 3.5.2-4162"
             )
             
+            Divider().padding(.vertical, 8)
+            
             // Arquitectura
             InfoRowSF(
                 icon: "cpu.fill",
@@ -119,19 +121,12 @@ struct ContentView: View {
                 title: "Arquitectura",
                 value: "Apple Silicon (M1 - M4)"
             )
-            
-            // Método
-            InfoRowSF(
-                icon: "network.slash",
-                iconColor: .red,
-                title: "Método",
-                value: "Bloqueo de dominios vía /etc/hosts"
-            )
         }
-        .padding(12)
+        .padding(16)
+        .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.gray.opacity(0.08))
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(NSColor.controlBackgroundColor))
         )
     }
     
@@ -160,42 +155,58 @@ struct ContentView: View {
     
     // MARK: - Footer Section
     private var footerSection: some View {
-        HStack(spacing: 12) {
-            // Botón principal de activación
+        VStack(spacing: 12) {
+            // Botón principal de activación - Full width, prominente
             Button(action: performActivation) {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     if isProcessing {
                         ProgressView()
-                            .scaleEffect(0.7)
-                            .frame(width: 14, height: 14)
+                            .scaleEffect(0.8)
+                            .frame(width: 16, height: 16)
                     } else {
-                        Image(systemName: "bolt.fill")
+                        Image(systemName: activateButtonIcon)
+                            .font(.system(size: 14, weight: .semibold))
                     }
                     Text(activateButtonTitle)
+                        .font(.system(size: 14, weight: .semibold))
                 }
-                .frame(width: 100)
+                .frame(maxWidth: .infinity)
+                .frame(height: 36)
             }
             .buttonStyle(.borderedProminent)
-            .tint(.blue)
+            .tint(activateButtonColor)
             .disabled(isProcessing)
             
-            // Botón de salir
-            Button(action: { NSApplication.shared.terminate(nil) }) {
-                Text("Salir")
-                    .frame(width: 70)
-            }
-            .buttonStyle(.bordered)
-            
-            // Botón de contacto/ayuda
-            Button(action: openHelp) {
-                HStack(spacing: 4) {
-                    Image(systemName: "questionmark.circle")
-                    Text("Ayuda")
+            // Botones secundarios
+            HStack(spacing: 12) {
+                // Botón de salir
+                Button(action: { NSApplication.shared.terminate(nil) }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "xmark.circle")
+                            .font(.system(size: 12))
+                        Text("Salir")
+                            .font(.system(size: 13))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 32)
                 }
-                .frame(width: 80)
+                .buttonStyle(.bordered)
+                
+                // Botón de ayuda
+                Button(action: openHelp) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: 12))
+                        Text("Ayuda")
+                            .font(.system(size: 13))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 32)
+                }
+                .buttonStyle(.bordered)
             }
-            .buttonStyle(.bordered)
         }
+        .padding(.horizontal, 20)
         .padding(.vertical, 16)
     }
     
@@ -267,9 +278,23 @@ struct ContentView: View {
     
     private var activateButtonTitle: String {
         switch activationState {
-        case .processing: return "..."
+        case .processing: return "Procesando..."
         case .success, .alreadyActive: return "Reactivar"
-        default: return "Activar"
+        default: return "Activar Screen Studio"
+        }
+    }
+    
+    private var activateButtonIcon: String {
+        switch activationState {
+        case .success, .alreadyActive: return "arrow.clockwise"
+        default: return "bolt.fill"
+        }
+    }
+    
+    private var activateButtonColor: Color {
+        switch activationState {
+        case .success, .alreadyActive: return .green
+        default: return .blue
         }
     }
     
@@ -321,20 +346,31 @@ struct InfoRowSF: View {
     let value: String
     
     var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundStyle(iconColor)
-                .frame(width: 20)
+        HStack(spacing: 12) {
+            // Icono con fondo circular
+            ZStack {
+                Circle()
+                    .fill(iconColor.opacity(0.15))
+                    .frame(width: 28, height: 28)
+                
+                Image(systemName: icon)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(iconColor)
+            }
             
+            // Título
             Text(title)
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(.secondary)
-                .frame(width: 110, alignment: .leading)
+                .frame(width: 100, alignment: .leading)
             
+            Spacer()
+            
+            // Valor alineado a la derecha
             Text(value)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.primary)
+                .multilineTextAlignment(.trailing)
         }
     }
 }
