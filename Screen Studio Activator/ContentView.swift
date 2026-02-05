@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Screen Studio Activator
 //
-//  Created by Yuna on 5/02/26.
+//  Created by kimYuna on 5/02/26.
 //
 
 import SwiftUI
@@ -39,7 +39,7 @@ struct ContentView: View {
                     // Información de la app
                     infoSection
                     
-                    
+
                     // Estado actual de la operación
                     statusSection
                 }
@@ -54,7 +54,7 @@ struct ContentView: View {
             // ═══════════════════════════════════════════════════════════════
             footerSection
         }
-        .frame(width: 380, height: 480)
+        .frame(width: 400, height: 520)
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             // Verificar si ya está activado al abrir
@@ -77,7 +77,7 @@ struct ContentView: View {
             Text("Screen Studio Activator")
                 .font(.system(size: 18, weight: .bold))
             
-            Text("Bloquea las conexiones de verificación de licencia")
+            Text("Activador local para Screen Studio")
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
         }
@@ -87,13 +87,53 @@ struct ContentView: View {
     
     // MARK: - Info Section
     private var infoSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            InfoRow(icon: "🚀", title: "Modos Soportados", items: ["Normal Mode", "Beta Mode"])
-            InfoRow(icon: "📊", title: "Versiones", items: ["2.x.x", "3.x.x"])
-            InfoRow(icon: "💻", title: "Arquitecturas", items: ["Apple Silicon (ARM64)", "Intel (x86_64)"])
+        VStack(alignment: .leading, spacing: 10) {
+            // Creador
+            InfoRowSF(
+                icon: "person.fill",
+                iconColor: .blue,
+                title: "Creado por",
+                value: "kimYuna"
+            )
+            
+            // Tipo de activador
+            InfoRowSF(
+                icon: "house.fill",
+                iconColor: .purple,
+                title: "Tipo",
+                value: "Activador Local"
+            )
+            
+            // Versión compatible
+            InfoRowSF(
+                icon: "app.badge.checkmark.fill",
+                iconColor: .green,
+                title: "Versión Compatible",
+                value: "Screen Studio 3.5.2-4162"
+            )
+            
+            // Arquitectura
+            InfoRowSF(
+                icon: "cpu.fill",
+                iconColor: .orange,
+                title: "Arquitectura",
+                value: "Apple Silicon (M1 - M4)"
+            )
+            
+            // Método
+            InfoRowSF(
+                icon: "network.slash",
+                iconColor: .red,
+                title: "Método",
+                value: "Bloqueo de dominios vía /etc/hosts"
+            )
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.gray.opacity(0.08))
+        )
     }
-    
     
     // MARK: - Status Section
     private var statusSection: some View {
@@ -211,13 +251,13 @@ struct ContentView: View {
     private var statusMessage: String {
         switch activationState {
         case .ready:
-            return "Listo. Pulsa 'Activar' para activar locamente"
+            return "Listo. Pulsa 'Activar' para bloquear los dominios de licencia."
         case .processing:
             return "Esperando autenticación..."
         case .success:
             return "Activado correctamente. Dominios bloqueados y caché DNS limpiada."
         case .alreadyActive:
-            return "Ya activado. Los dominios ya están bloqueados"
+            return "Ya activado. Los dominios ya están bloqueados."
         case .cancelled:
             return "Operación cancelada por el usuario."
         case .error(let message):
@@ -272,33 +312,48 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Componente InfoRow reutilizable
+// MARK: - Componente InfoRowSF con SF Symbols
 
-struct InfoRow: View {
+struct InfoRowSF: View {
     let icon: String
+    let iconColor: Color
     let title: String
-    let items: [String]
+    let value: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 6) {
-                Text(icon)
-                Text(title)
-                    .font(.system(size: 12, weight: .semibold))
-            }
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 14))
+                .foregroundStyle(iconColor)
+                .frame(width: 20)
             
-            ForEach(items, id: \.self) { item in
-                HStack(spacing: 6) {
-                    Text("→")
-                        .font(.system(size: 10))
-                        .foregroundStyle(.tertiary)
-                    Text(item)
-                        .font(.system(size: 11))
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.leading, 22)
-            }
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(.secondary)
+                .frame(width: 110, alignment: .leading)
+            
+            Text(value)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.primary)
         }
+    }
+}
+
+// MARK: - Componente WarningItem
+
+struct WarningItem: View {
+    let text: String
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 10))
+                .foregroundStyle(.orange.opacity(0.8))
+            Text(text)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.leading, 4)
     }
 }
 
