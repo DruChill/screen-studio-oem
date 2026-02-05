@@ -211,13 +211,13 @@ struct ContentView: View {
     private var statusMessage: String {
         switch activationState {
         case .ready:
-            return "Listo. Pulsa 'Activar' para bloquear los dominios."
+            return "Listo. Pulsa 'Activar' para activar locamente"
         case .processing:
             return "Esperando autenticación..."
         case .success:
-            return "✓ Activado correctamente. Dominios bloqueados y caché DNS limpiada."
+            return "Activado correctamente. Dominios bloqueados y caché DNS limpiada."
         case .alreadyActive:
-            return "✓ Ya activado. Los dominios ya están bloqueados en /etc/hosts."
+            return "Ya activado. Los dominios ya están bloqueados"
         case .cancelled:
             return "Operación cancelada por el usuario."
         case .error(let message):
