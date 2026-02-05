@@ -69,22 +69,12 @@ struct ContentView: View {
     // MARK: - Header Section
     private var headerSection: some View {
         VStack(spacing: 12) {
-            // Icono principal con animación sutil
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [.blue.opacity(0.2), .purple.opacity(0.2)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 70, height: 70)
-                
-                Image(systemName: stateIcon)
-                    .font(.system(size: 32, weight: .medium))
-                    .foregroundStyle(stateIconColor)
-            }
+            // Logo de la app
+            Image("AppLogo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 80, height: 80)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             
             Text("Screen Studio Activator")
                 .font(.system(size: 18, weight: .bold))
