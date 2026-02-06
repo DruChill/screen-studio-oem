@@ -65,15 +65,8 @@ struct ContentView: View {
     // MARK: - Header Section
     private var headerSection: some View {
         VStack(spacing: 12) {
-            // Logo de la app
-            Image("AppLogo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 80, height: 80)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-            
             Text("Screen Studio Activator")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 30, weight: .bold))
         }
         .padding(.vertical, 20)
         .frame(maxWidth: .infinity)
