@@ -65,7 +65,7 @@ struct ContentView: View {
     // MARK: - Header Section
     private var headerSection: some View {
         VStack(spacing: 12) {
-            Text("Screen Studio Activator")
+            Text("Screen Studio License")
                 .font(.system(size: 30, weight: .bold))
         }
         .padding(.vertical, 20)
@@ -110,7 +110,7 @@ struct ContentView: View {
                 icon: "cpu.fill",
                 iconColor: .orange,
                 title: "Arquitectura",
-                value: "Apple Silicon (M1 - M4)"
+                value: "Apple Silicon (M1 - M5)"
             )
         }
         .padding(16)
@@ -322,7 +322,7 @@ struct ContentView: View {
     }
     
     private func openHelp() {
-        if let url = URL(string: "https://github.com") {
+        if let url = URL(string: "https://www.drudev.me/contacto") {
             NSWorkspace.shared.open(url)
         }
     }
