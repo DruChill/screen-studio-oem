@@ -98,7 +98,7 @@ struct ContentView: View {
             
             Divider().padding(.leading, 40)
             
-            DetailRow(label: "Tipo", value: "Activador Local", icon: "house.fill")
+            DetailRow(label: "Tipo", value: "Licencia OEM", icon: "house.fill")
             
             Divider().padding(.leading, 40)
             
