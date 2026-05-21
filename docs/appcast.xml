@@ -5,5 +5,19 @@
     <description>Actualizaciones de Screen Studio Activator</description>
     <language>es</language>
     <!-- Los items se agregan aquí con cada release usando publish_update.sh -->
+      <item>
+      <title>Versión 1.0.0</title>
+      <description><![CDATA[<p>Versión inicial con auto-actualizaciones via Sparkle</p>]]></description>
+      <pubDate>Thu, 21 May 2026 15:44:34 -0500</pubDate>
+      <sparkle:version>1</sparkle:version>
+      <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://druchill.github.io/screen-studio-oem/Screen_Studio_Activator_2026-1.0.0.zip"
+        length="5274498"
+        type="application/octet-stream"
+        sparkle:edSignature="hp50EwuhL8ref52WGBmWENiSwe++tCIPDyh0BFKRra+E8hX+BSGyuy9QKArx/8W8HBeC1UwgWzqK+uud/LB/Cg=="
+      />
+    </item>
   </channel>
 </rss>
