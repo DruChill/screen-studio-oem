@@ -11,298 +11,288 @@ struct ContentView: View {
     // MARK: - Sparkle Updater
     @ObservedObject var updaterViewModel: UpdaterViewModel
     
-    // MARK: - Estado de la UI
+    // MARK: - State
     @State private var activationState: ActivationState = .ready
     @State private var isProcessing = false
+    @State private var iconBounce = false
+    @State private var showContent = false
     
     enum ActivationState {
-        case ready           // Listo para activar
-        case processing      // Procesando (mostrando diálogo de contraseña)
-        case success         // Activación exitosa
-        case alreadyActive   // Ya estaba activado
-        case cancelled       // Usuario canceló
-        case error(String)   // Error con mensaje
+        case ready
+        case processing
+        case success
+        case alreadyActive
+        case cancelled
+        case error(String)
     }
+    
+    // MARK: - Body
     
     var body: some View {
         VStack(spacing: 0) {
-            // ═══════════════════════════════════════════════════════════════
-            // HEADER - Título e icono principal
-            // ═══════════════════════════════════════════════════════════════
-            headerSection
+            // Barra de título drag area
+            Color.clear
+                .frame(height: 8)
             
-            Divider()
-                .padding(.horizontal)
-            
-            // ═══════════════════════════════════════════════════════════════
-            // CONTENIDO PRINCIPAL - Info y estado
-            // ═══════════════════════════════════════════════════════════════
-            VStack(alignment: .leading, spacing: 16) {
-                // Información de la app
-                infoSection
-                
-                // Estado actual de la operación
-                statusSection
+            VStack(spacing: 24) {
+                heroSection
+                detailsCard
+                statusIndicator
+                actionsSection
             }
-            .padding(20)
-            
-            Divider()
-                .padding(.horizontal)
-            
-            // ═══════════════════════════════════════════════════════════════
-            // FOOTER - Botones de acción
-            // ═══════════════════════════════════════════════════════════════
-            footerSection
+            .padding(.horizontal, 28)
+            .padding(.bottom, 24)
         }
-        .frame(width: 400)
+        .frame(width: 420)
         .fixedSize(horizontal: false, vertical: true)
-        .background(Color(NSColor.windowBackgroundColor))
+        .background(.background)
         .onAppear {
-            // Verificar si ya está activado al abrir
             if AuthorizationService.checkIfAlreadyBlocked() {
                 activationState = .alreadyActive
             }
+            withAnimation(.easeOut(duration: 0.6).delay(0.1)) {
+                showContent = true
+            }
         }
     }
     
-    // MARK: - Header Section
-    private var headerSection: some View {
-        VStack(spacing: 12) {
-            Text("Screen Studio License")
-                .font(.system(size: 30, weight: .bold))
+    // MARK: - Hero Section
+    
+    private var heroSection: some View {
+        VStack(spacing: 14) {
+            // Icono principal con efecto de estado
+            ZStack {
+                // Glow sutil detrás del icono
+                Circle()
+                    .fill(stateAccentColor.opacity(0.08))
+                    .frame(width: 80, height: 80)
+                    .blur(radius: 12)
+                
+                Image(systemName: heroIcon)
+                    .font(.system(size: 42, weight: .light))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(stateAccentColor)
+                    .symbolEffect(.bounce, value: iconBounce)
+            }
+            .padding(.top, 8)
+            
+            VStack(spacing: 4) {
+                Text("Screen Studio")
+                    .font(.system(size: 22, weight: .bold, design: .default))
+                    .foregroundStyle(.primary)
+                
+                Text("Activador de Licencia")
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundStyle(.secondary)
+            }
         }
-        .padding(.vertical, 20)
-        .frame(maxWidth: .infinity)
+        .opacity(showContent ? 1 : 0)
+        .offset(y: showContent ? 0 : 8)
     }
     
-    // MARK: - Info Section
-    private var infoSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Creador
-            InfoRowSF(
-                icon: "person.fill",
-                iconColor: .blue,
-                title: "Creado por",
-                value: "kimYuna"
-            )
+    // MARK: - Details Card
+    
+    private var detailsCard: some View {
+        VStack(spacing: 0) {
+            DetailRow(label: "Creador", value: "kimYuna", icon: "person.fill")
             
-            Divider().padding(.vertical, 8)
+            Divider().padding(.leading, 40)
             
-            // Tipo de activador
-            InfoRowSF(
-                icon: "house.fill",
-                iconColor: .purple,
-                title: "Tipo",
-                value: "Activador Local"
-            )
+            DetailRow(label: "Tipo", value: "Activador Local", icon: "house.fill")
             
-            Divider().padding(.vertical, 8)
+            Divider().padding(.leading, 40)
             
-            // Versión compatible
-            InfoRowSF(
-                icon: "app.badge.checkmark.fill",
-                iconColor: .green,
-                title: "Versión Compatible",
-                value: "Screen Studio 3.5.2-4162"
-            )
+            DetailRow(label: "Compatible", value: "Screen Studio 3.6.0", icon: "app.badge.checkmark.fill")
             
-            Divider().padding(.vertical, 8)
+            Divider().padding(.leading, 40)
             
-            // Arquitectura
-            InfoRowSF(
-                icon: "cpu.fill",
-                iconColor: .orange,
-                title: "Arquitectura",
-                value: "Apple Silicon (M1 - M5)"
-            )
+            DetailRow(label: "Arquitectura", value: "Apple Silicon (M1 -M5)", icon: "cpu.fill")
         }
-        .padding(16)
-        .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(NSColor.controlBackgroundColor))
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
         )
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .opacity(showContent ? 1 : 0)
+        .offset(y: showContent ? 0 : 12)
     }
     
-    // MARK: - Status Section
-    private var statusSection: some View {
-        HStack(spacing: 10) {
+    // MARK: - Status Indicator
+    
+    private var statusIndicator: some View {
+        HStack(spacing: 8) {
             if isProcessing {
                 ProgressView()
-                    .scaleEffect(0.8)
+                    .controlSize(.small)
             } else {
-                Image(systemName: statusIcon)
-                    .foregroundStyle(statusColor)
+                Circle()
+                    .fill(statusDotColor)
+                    .frame(width: 8, height: 8)
+                    .overlay(
+                        Circle()
+                            .fill(statusDotColor.opacity(0.4))
+                            .frame(width: 8, height: 8)
+                            .scaleEffect(isActiveState ? 1.8 : 1.0)
+                            .opacity(isActiveState ? 0 : 1)
+                            .animation(
+                                isActiveState
+                                    ? .easeInOut(duration: 1.5).repeatForever(autoreverses: false)
+                                    : .default,
+                                value: isActiveState
+                            )
+                    )
             }
             
-            Text(statusMessage)
-                .font(.system(size: 12))
-                .foregroundStyle(statusColor)
+            Text(statusText)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(.secondary)
+            
+            Spacer()
         }
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(statusBackgroundColor)
-        )
+        .padding(.horizontal, 4)
+        .opacity(showContent ? 1 : 0)
     }
     
-    // MARK: - Footer Section
-    private var footerSection: some View {
-        VStack(spacing: 12) {
-            // Botón principal de activación - Full width, prominente
+    // MARK: - Actions Section
+    
+    private var actionsSection: some View {
+        VStack(spacing: 10) {
+            // Botón principal
             Button(action: performActivation) {
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     if isProcessing {
                         ProgressView()
-                            .scaleEffect(0.8)
-                            .frame(width: 16, height: 16)
+                            .controlSize(.small)
                     } else {
-                        Image(systemName: activateButtonIcon)
-                            .font(.system(size: 14, weight: .semibold))
+                        Image(systemName: primaryButtonIcon)
+                            .font(.system(size: 13, weight: .medium))
                     }
-                    Text(activateButtonTitle)
-                        .font(.system(size: 14, weight: .semibold))
+                    Text(primaryButtonTitle)
+                        .font(.system(size: 13, weight: .medium))
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 36)
+                .frame(height: 32)
             }
             .buttonStyle(.borderedProminent)
-            .tint(activateButtonColor)
+            .tint(stateAccentColor)
             .disabled(isProcessing)
+            .controlSize(.large)
             
-            // Botones secundarios
-            HStack(spacing: 12) {
-                // Botón de salir
-                Button(action: { NSApplication.shared.terminate(nil) }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "xmark.circle")
-                            .font(.system(size: 12))
-                        Text("Salir")
-                            .font(.system(size: 13))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 32)
+            // Botones secundarios como texto
+            HStack(spacing: 4) {
+                // Actualizar
+                Button {
+                    updaterViewModel.checkForUpdates()
+                } label: {
+                    Label("Buscar actualizaciones", systemImage: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 11))
                 }
-                .buttonStyle(.bordered)
-                
-                // Botón de buscar actualizaciones
-                Button(action: { updaterViewModel.checkForUpdates() }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .font(.system(size: 12))
-                        Text("Actualizar")
-                            .font(.system(size: 13))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 32)
-                }
-                .buttonStyle(.bordered)
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
                 .disabled(!updaterViewModel.canCheckForUpdates)
                 
-                // Botón de ayuda
-                Button(action: openHelp) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "questionmark.circle")
-                            .font(.system(size: 12))
-                        Text("Ayuda")
-                            .font(.system(size: 13))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 32)
+                Spacer()
+                
+                // Ayuda
+                Button {
+                    openHelp()
+                } label: {
+                    Label("Ayuda", systemImage: "questionmark.circle")
+                        .font(.system(size: 11))
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+                
+                Text("·")
+                    .foregroundStyle(.quaternary)
+                    .font(.system(size: 11))
+                
+                // Salir
+                Button {
+                    NSApplication.shared.terminate(nil)
+                } label: {
+                    Text("Salir")
+                        .font(.system(size: 11))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
             }
+            .padding(.horizontal, 4)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
+        .opacity(showContent ? 1 : 0)
+        .offset(y: showContent ? 0 : 8)
     }
     
-    // MARK: - Computed Properties para UI
+    // MARK: - Computed Properties
     
-    private var stateIcon: String {
+    private var heroIcon: String {
         switch activationState {
-        case .ready, .processing: return "shield.lefthalf.filled"
-        case .success, .alreadyActive: return "checkmark.shield.fill"
-        case .cancelled: return "xmark.shield"
-        case .error: return "exclamationmark.shield"
+        case .ready, .processing:
+            return "shield.lefthalf.filled"
+        case .success, .alreadyActive:
+            return "checkmark.shield.fill"
+        case .cancelled:
+            return "xmark.shield.fill"
+        case .error:
+            return "exclamationmark.shield.fill"
         }
     }
     
-    private var stateIconColor: Color {
+    private var stateAccentColor: Color {
         switch activationState {
-        case .ready, .processing: return .blue
+        case .ready, .processing: return .accentColor
         case .success, .alreadyActive: return .green
         case .cancelled: return .orange
         case .error: return .red
         }
     }
     
-    private var statusIcon: String {
+    private var statusDotColor: Color {
         switch activationState {
-        case .ready: return "info.circle.fill"
-        case .processing: return "hourglass"
-        case .success: return "checkmark.circle.fill"
-        case .alreadyActive: return "checkmark.seal.fill"
-        case .cancelled: return "xmark.circle.fill"
-        case .error: return "exclamationmark.triangle.fill"
-        }
-    }
-    
-    private var statusColor: Color {
-        switch activationState {
-        case .ready, .processing: return .secondary
+        case .ready: return .secondary
+        case .processing: return .accentColor
         case .success, .alreadyActive: return .green
         case .cancelled: return .orange
         case .error: return .red
         }
     }
     
-    private var statusBackgroundColor: Color {
+    private var isActiveState: Bool {
         switch activationState {
-        case .ready, .processing: return Color.gray.opacity(0.1)
-        case .success, .alreadyActive: return Color.green.opacity(0.1)
-        case .cancelled: return Color.orange.opacity(0.1)
-        case .error: return Color.red.opacity(0.1)
+        case .success, .alreadyActive: return true
+        default: return false
         }
     }
     
-    private var statusMessage: String {
+    private var statusText: String {
         switch activationState {
         case .ready:
-            return "Listo. Pulsa 'Activar' para bloquear los dominios de licencia."
+            return "Listo para activar"
         case .processing:
-            return "Esperando autenticación..."
+            return "Esperando autenticación…"
         case .success:
-            return "Activado correctamente. Dominios bloqueados y caché DNS limpiada."
+            return "Activado — dominios bloqueados"
         case .alreadyActive:
-            return "Ya activado. Los dominios ya están bloqueados."
+            return "Activo — licencia verificada"
         case .cancelled:
-            return "Operación cancelada por el usuario."
-        case .error(let message):
-            return "Error: \(message)"
+            return "Cancelado por el usuario"
+        case .error(let msg):
+            return msg
         }
     }
     
-    private var activateButtonTitle: String {
+    private var primaryButtonTitle: String {
         switch activationState {
-        case .processing: return "Procesando..."
+        case .processing: return "Autenticando…"
         case .success, .alreadyActive: return "Reactivar"
-        default: return "Activar Screen Studio"
+        default: return "Activar"
         }
     }
     
-    private var activateButtonIcon: String {
+    private var primaryButtonIcon: String {
         switch activationState {
         case .success, .alreadyActive: return "arrow.clockwise"
         default: return "bolt.fill"
-        }
-    }
-    
-    private var activateButtonColor: Color {
-        switch activationState {
-        case .success, .alreadyActive: return .green
-        default: return .blue
         }
     }
     
@@ -312,25 +302,24 @@ struct ContentView: View {
         isProcessing = true
         activationState = .processing
         
-        // Ejecutar en segundo plano para no bloquear la UI
         DispatchQueue.global(qos: .userInitiated).async {
             let result = AuthorizationService.activateHostsBlocking()
             
-            // Actualizar UI en el hilo principal
             DispatchQueue.main.async {
                 isProcessing = false
                 
                 switch result {
                 case .success:
-                    withAnimation(.easeInOut(duration: 0.3)) {
+                    withAnimation(.easeInOut(duration: 0.4)) {
                         activationState = .success
                     }
+                    iconBounce.toggle()
                 case .cancelled:
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.3)) {
                         activationState = .cancelled
                     }
                 case .error(let message):
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 0.3)) {
                         activationState = .error(message)
                     }
                 }
@@ -345,59 +334,33 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Componente InfoRowSF con SF Symbols
+// MARK: - Detail Row Component
 
-struct InfoRowSF: View {
-    let icon: String
-    let iconColor: Color
-    let title: String
+struct DetailRow: View {
+    let label: String
     let value: String
+    let icon: String
     
     var body: some View {
         HStack(spacing: 12) {
-            // Icono con fondo circular
-            ZStack {
-                Circle()
-                    .fill(iconColor.opacity(0.15))
-                    .frame(width: 28, height: 28)
-                
-                Image(systemName: icon)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(iconColor)
-            }
-            
-            // Título
-            Text(title)
-                .font(.system(size: 12, weight: .medium))
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(.secondary)
-                .frame(width: 100, alignment: .leading)
+                .frame(width: 20, alignment: .center)
+            
+            Text(label)
+                .font(.system(size: 13))
+                .foregroundStyle(.secondary)
             
             Spacer()
             
-            // Valor alineado a la derecha
             Text(value)
-                .font(.system(size: 12, weight: .semibold))
+                .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(.primary)
-                .multilineTextAlignment(.trailing)
         }
-    }
-}
-
-// MARK: - Componente WarningItem
-
-struct WarningItem: View {
-    let text: String
-    
-    var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 10))
-                .foregroundStyle(.orange.opacity(0.8))
-            Text(text)
-                .font(.system(size: 11))
-                .foregroundStyle(.secondary)
-        }
-        .padding(.leading, 4)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .contentShape(Rectangle())
     }
 }
 
