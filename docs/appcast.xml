@@ -19,5 +19,19 @@
         sparkle:edSignature="hp50EwuhL8ref52WGBmWENiSwe++tCIPDyh0BFKRra+E8hX+BSGyuy9QKArx/8W8HBeC1UwgWzqK+uud/LB/Cg=="
       />
     </item>
+      <item>
+      <title>Versión 1.0.1</title>
+      <description><![CDATA[<p>Actualización automática de versión</p>]]></description>
+      <pubDate>Thu, 21 May 2026 16:17:00 -0500</pubDate>
+      <sparkle:version>1</sparkle:version>
+      <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://druchill.github.io/screen-studio-oem/Screen_Studio_Activator_2026-1.0.1.zip"
+        length="5274484"
+        type="application/octet-stream"
+        sparkle:edSignature="pRYb7faBPQJ1cGor24GL6pKIiaLTWuRWBDpcl/j+iHrf+VoCrGRBh33wcEqBihSYm3ftf81UmwXbWY3DSlkiBw=="
+      />
+    </item>
   </channel>
 </rss>
