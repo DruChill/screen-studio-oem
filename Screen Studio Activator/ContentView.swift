@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    // MARK: - Sparkle Updater
+    @ObservedObject var updaterViewModel: UpdaterViewModel
+    
     // MARK: - Estado de la UI
     @State private var activationState: ActivationState = .ready
     @State private var isProcessing = false
@@ -182,6 +185,20 @@ struct ContentView: View {
                     .frame(height: 32)
                 }
                 .buttonStyle(.bordered)
+                
+                // Botón de buscar actualizaciones
+                Button(action: { updaterViewModel.checkForUpdates() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .font(.system(size: 12))
+                        Text("Actualizar")
+                            .font(.system(size: 13))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 32)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!updaterViewModel.canCheckForUpdates)
                 
                 // Botón de ayuda
                 Button(action: openHelp) {
@@ -385,5 +402,5 @@ struct WarningItem: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(updaterViewModel: UpdaterViewModel())
 }

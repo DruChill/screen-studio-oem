@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- URL del feed de actualizaciones (appcast en GitHub Pages) -->
+	<key>SUFeedURL</key>
+	<string>https://druchill.github.io/screen-studio-oem/appcast.xml</string>
+
+	<!-- Clave pública EdDSA para verificar firmas de actualizaciones -->
+	<!-- REEMPLAZAR con la clave real después de ejecutar generate_keys -->
+	<key>SUPublicEDKey</key>
+	<string>mkwgoskSJN+KhmSZc5y1GHngScR9Z3fEgEXe3YEGKdM=</string>
+
+	<!-- Verificar actualizaciones automáticamente al iniciar -->
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+</dict>
+</plist>
