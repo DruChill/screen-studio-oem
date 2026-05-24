@@ -81,7 +81,7 @@ struct ContentView: View {
                     .font(.system(size: 22, weight: .bold, design: .default))
                     .foregroundStyle(.primary)
                 
-                Text("https://www.kimyuna.store")
+                Text(L10n.appSubtitle)
                     .font(.system(size: 13, weight: .regular))
                     .foregroundStyle(.secondary)
             }
@@ -94,23 +94,23 @@ struct ContentView: View {
     
     private var detailsCard: some View {
         VStack(spacing: 0) {
-            DetailRow(label: "Creador", value: "kimYuna", icon: "person.fill")
+            DetailRow(label: L10n.creator, value: "kimYuna", icon: "person.fill")
             
             Divider().padding(.leading, 40)
             
-            DetailRow(label: "Tipo", value: "Licencia OEM", icon: "house.fill")
+            DetailRow(label: L10n.type, value: L10n.oemLicense, icon: "house.fill")
             
             Divider().padding(.leading, 40)
             
-            DetailRow(label: "Compatible", value: "v3.5.2 - v3.7.1", icon: "app.badge.checkmark.fill")
+            DetailRow(label: L10n.compatible, value: "Screen Studio 3.6.0", icon: "app.badge.checkmark.fill")
             
             Divider().padding(.leading, 40)
             
-            DetailRow(label: "Arquitectura", value: "Apple Silicon (M1 -M5)", icon: "cpu.fill")
+            DetailRow(label: L10n.architecture, value: "Apple Silicon (M1–M5)", icon: "cpu.fill")
             
             Divider().padding(.leading, 40)
             
-            DetailRow(label: "Última Actualización", value: "Mayo 24, 2026", icon: "arrow.2.circlepath.circle")
+            DetailRow(label: L10n.lastUpdate, value: L10n.lastUpdateDate, icon: "arrow.2.circlepath.circle")
         }
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -168,7 +168,7 @@ struct ContentView: View {
                         ProgressView()
                             .controlSize(.small)
                     }
-                    Text(primaryButtonTitle)
+                    Text(primaryButtonLabel)
                         .font(.system(size: 13, weight: .semibold))
                 }
                 .frame(maxWidth: .infinity)
@@ -181,7 +181,7 @@ struct ContentView: View {
             
             // Botón Exit - estilo outlined
             Button(action: exitApp) {
-                Text("Salir")
+                Text(L10n.exit)
                     .font(.system(size: 13, weight: .regular))
                     .frame(maxWidth: .infinity)
                     .frame(height: 30)
@@ -191,7 +191,7 @@ struct ContentView: View {
             
             // Botón Contact - estilo outlined
             Button(action: openHelp) {
-                Text("Contacto")
+                Text(L10n.contact)
                     .font(.system(size: 13, weight: .regular))
                     .frame(maxWidth: .infinity)
                     .frame(height: 30)
@@ -247,25 +247,25 @@ struct ContentView: View {
     private var statusText: String {
         switch activationState {
         case .ready:
-            return "Listo para activar"
+            return L10n.readyToActivate
         case .processing:
-            return "Esperando autenticación…"
+            return L10n.waitingAuthentication
         case .success:
-            return "Activado — dominios bloqueados"
+            return L10n.activatedDomainsBlocked
         case .alreadyActive:
-            return "Activo — licencia verificada"
+            return L10n.activeLicenseVerified
         case .cancelled:
-            return "Cancelado por el usuario"
+            return L10n.cancelledByUser
         case .error(let msg):
             return msg
         }
     }
     
-    private var primaryButtonTitle: String {
+    private var primaryButtonLabel: String {
         switch activationState {
-        case .processing: return "Autenticando…"
-        case .success, .alreadyActive: return "Reactivar"
-        default: return "Activate"
+        case .processing: return L10n.authenticating
+        case .success, .alreadyActive: return L10n.reactivate
+        default: return L10n.activate
         }
     }
     

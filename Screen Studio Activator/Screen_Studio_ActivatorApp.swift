@@ -88,7 +88,7 @@ struct Screen_Studio_ActivatorApp: App {
         .commands {
             // Agregar "Buscar Actualizaciones..." en el menú de la app
             CommandGroup(after: .appInfo) {
-                Button("Buscar Actualizaciones...") {
+                Button(L10n.checkForUpdates) {
                     updaterViewModel.checkForUpdates()
                 }
                 .disabled(!updaterViewModel.canCheckForUpdates)
