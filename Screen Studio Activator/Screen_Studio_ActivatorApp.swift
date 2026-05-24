@@ -8,6 +8,7 @@
 import SwiftUI
 import Sparkle
 import Combine
+import AppKit
 
 // MARK: - Sparkle Update ViewModel
 
@@ -37,8 +38,43 @@ final class UpdaterViewModel: ObservableObject {
 
 // MARK: - App Entry Point
 
+// MARK: - AppDelegate for Window Configuration
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        configureMainWindow()
+    }
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
+        configureMainWindow()
+    }
+    
+    private func configureMainWindow() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            guard let window = NSApplication.shared.windows.first else { return }
+            
+            // Always on top
+            window.level = .floating
+            
+            // Remove standard window buttons (close, minimize, zoom)
+            window.standardWindowButton(.closeButton)?.isHidden = true
+            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+            window.standardWindowButton(.zoomButton)?.isHidden = true
+            
+            // Prevent closing via Cmd+W
+            window.styleMask.remove(.closable)
+            window.styleMask.remove(.miniaturizable)
+            window.styleMask.remove(.resizable)
+            
+            // Center the window
+            window.center()
+        }
+    }
+}
+
 @main
 struct Screen_Studio_ActivatorApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var updaterViewModel = UpdaterViewModel()
     
     var body: some Scene {

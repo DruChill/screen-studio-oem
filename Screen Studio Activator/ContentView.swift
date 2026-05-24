@@ -156,54 +156,44 @@ struct ContentView: View {
     // MARK: - Actions Section
     
     private var actionsSection: some View {
-        VStack(spacing: 10) {
-            // Botón principal
+        HStack(spacing: 12) {
+            // Botón Activate - estilo filled azul
             Button(action: performActivation) {
                 HStack(spacing: 6) {
                     if isProcessing {
                         ProgressView()
                             .controlSize(.small)
-                    } else {
-                        Image(systemName: primaryButtonIcon)
-                            .font(.system(size: 13, weight: .medium))
                     }
                     Text(primaryButtonTitle)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 13, weight: .semibold))
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 32)
+                .frame(height: 30)
             }
             .buttonStyle(.borderedProminent)
-            .tint(stateAccentColor)
+            .tint(.accentColor)
             .disabled(isProcessing)
             .controlSize(.large)
             
-            // Botones secundarios como texto
-            HStack(spacing: 4) {
-                // Actualizar
-                Button {
-                    updaterViewModel.checkForUpdates()
-                } label: {
-                    Label("Buscar actualizaciones", systemImage: "arrow.triangle.2.circlepath")
-                        .font(.system(size: 11))
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-                .disabled(!updaterViewModel.canCheckForUpdates)
-                
-                Spacer()
-                
-                // Ayuda
-                Button {
-                    openHelp()
-                } label: {
-                    Label("Ayuda", systemImage: "questionmark.circle")
-                        .font(.system(size: 11))
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+            // Botón Exit - estilo outlined
+            Button(action: exitApp) {
+                Text("Salir")
+                    .font(.system(size: 13, weight: .regular))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 30)
             }
-            .padding(.horizontal, 4)
+            .buttonStyle(.bordered)
+            .controlSize(.large)
+            
+            // Botón Contact - estilo outlined
+            Button(action: openHelp) {
+                Text("Contacto")
+                    .font(.system(size: 13, weight: .regular))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 30)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.large)
         }
         .opacity(showContent ? 1 : 0)
         .offset(y: showContent ? 0 : 8)
@@ -271,16 +261,11 @@ struct ContentView: View {
         switch activationState {
         case .processing: return "Autenticando…"
         case .success, .alreadyActive: return "Reactivar"
-        default: return "Activar"
+        default: return "Activate"
         }
     }
     
-    private var primaryButtonIcon: String {
-        switch activationState {
-        case .success, .alreadyActive: return "arrow.clockwise"
-        default: return "bolt.fill"
-        }
-    }
+
     
     // MARK: - Actions
     
@@ -317,6 +302,10 @@ struct ContentView: View {
         if let url = URL(string: "https://www.drudev.me/contacto") {
             NSWorkspace.shared.open(url)
         }
+    }
+    
+    private func exitApp() {
+        NSApplication.shared.terminate(nil)
     }
 }
 
