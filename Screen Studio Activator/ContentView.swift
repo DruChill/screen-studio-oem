@@ -202,20 +202,6 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
-                
-                Text("·")
-                    .foregroundStyle(.quaternary)
-                    .font(.system(size: 11))
-                
-                // Salir
-                Button {
-                    NSApplication.shared.terminate(nil)
-                } label: {
-                    Text("Salir")
-                        .font(.system(size: 11))
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
             }
             .padding(.horizontal, 4)
         }
