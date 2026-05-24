@@ -81,7 +81,7 @@ struct ContentView: View {
                     .font(.system(size: 22, weight: .bold, design: .default))
                     .foregroundStyle(.primary)
                 
-                Text("Activador de Licencia")
+                Text("https://www.kimyuna.store")
                     .font(.system(size: 13, weight: .regular))
                     .foregroundStyle(.secondary)
             }
@@ -102,11 +102,15 @@ struct ContentView: View {
             
             Divider().padding(.leading, 40)
             
-            DetailRow(label: "Compatible", value: "Screen Studio 3.6.0", icon: "app.badge.checkmark.fill")
+            DetailRow(label: "Compatible", value: "v3.5.2 - v3.7.1", icon: "app.badge.checkmark.fill")
             
             Divider().padding(.leading, 40)
             
             DetailRow(label: "Arquitectura", value: "Apple Silicon (M1 -M5)", icon: "cpu.fill")
+            
+            Divider().padding(.leading, 40)
+            
+            DetailRow(label: "Última Actualización", value: "Mayo 24, 2026", icon: "arrow.2.circlepath.circle")
         }
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
